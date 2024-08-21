@@ -1,4 +1,4 @@
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     renderCriteria();
     document.getElementById("generate-pdf").addEventListener("click", generatePDF);
     document.getElementById("toggle-mode").addEventListener("click", toggleMode);
@@ -80,86 +80,73 @@
         });
     }
 
-        function generatePDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+    function generatePDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
 
-            const zone = document.getElementById("zone").value;
-            const observation = document.getElementById("observation").value;
+        const zone = document.getElementById("zone").value;
+        const observation = document.getElementById("observation").value;
 
-            doc.setFontSize(16);
-            doc.text("Audit 6S", 10, 10);
-            doc.setFontSize(12);
-            doc.text(`Zone/Site: ${zone}`, 10, 20);
-            doc.text(`Observation: ${observation}`, 10, 30);
+        doc.setFontSize(16);
+        doc.text("Audit 6S", 10, 10);
+        doc.setFontSize(12);
+        doc.text(`Zone/Site: ${zone}`, 10, 20);
+        doc.text(`Observation: ${observation}`, 10, 30);
 
-            let totalScore = 0;
-            let criterionCount = 0;
+        let totalScore = 0;
+        let criterionCount = 0;
 
-            Object.entries(criteriaData).forEach(([key, items]) => {
-                let bodyData = [];
-                let sectionScore = 0;
-                let sectionMaxScore = 0;
+        Object.entries(criteriaData).forEach(([key, items]) => {
+            let bodyData = [];
+            let sectionScore = 0;
+            let sectionMaxScore = 0;
 
-                items.forEach((item, idx) => {
-                    const note = parseFloat(document.getElementById(`note-${key}-${idx}`).value) || 0;
-                    const coefficient = parseFloat(document.getElementById(`coefficient-${key}-${idx}`).value) || 0;
-                    const score = note * coefficient;
+            items.forEach((item, idx) => {
+                const note = parseFloat(document.getElementById(`note-${key}-${idx}`).value) || 0;
+                const coefficient = parseFloat(document.getElementById(`coefficient-${key}-${idx}`).value) || 0;
+                const score = note * coefficient;
 
-                    sectionScore += score;
-                    sectionMaxScore += 5 * coefficient;
+                sectionScore += score;
+                sectionMaxScore += 5 * coefficient;
 
-                    const selectedOption = (document.querySelector(`input[name="${key}-${idx}"]:checked`) || {}).value || "Non sélectionné";
+                const selectedOption = (document.querySelector(`input[name="${key}-${idx}"]:checked`) || {}).value || "Non sélectionné";
 
-                    bodyData.push([
-                        item.Name,
-                        selectedOption,
-                        score.toFixed(2),
-                    ]);
-                });
-
-                const percentageScore = ((sectionScore / sectionMaxScore) * 100).toFixed(2);
-                totalScore += sectionScore;
-                criterionCount++;
-
-                doc.autoTable({
-                    startY: doc.lastAutoTable?.finalY + 10 || 40,
-                    head: [[key, 'Réponse', 'Score']],
-                    body: bodyData,
-                    theme: 'grid',
-                    styles: { fontSize: 10 },
-                    headStyles: { fillColor: [22, 160, 133] },
-                    foot: [['Score de section', '', `${sectionScore.toFixed(2)} (${percentageScore}%)`]],
-                    footStyles: { fillColor: [22, 160, 133], textColor: [255, 255, 255] },
-                });
+                bodyData.push([
+                    item.Name,
+                    selectedOption,
+                    score.toFixed(2),
+                ]);
             });
 
-            // Correct global score calculation: (SUM(criteria_scores) / number of criteria) * 100
-            const globalScore = ((totalScore / criterionCount) * 100).toFixed(2);
-            doc.setFontSize(14);
-            doc.text(`Score global: ${globalScore}%`, 10, doc.lastAutoTable.finalY + 20);
+            const percentageScore = ((sectionScore / sectionMaxScore) * 100).toFixed(2);
+            totalScore += sectionScore;
+            criterionCount++;
 
-            doc.save("audit-6s-report.pdf");
-        }
+            doc.autoTable({
+                startY: doc.lastAutoTable?.finalY + 10 || 40,
+                head: [[key, 'Réponse', 'Score']],
+                body: bodyData,
+                theme: 'grid',
+                styles: { fontSize: 10 },
+                headStyles: { fillColor: [22, 160, 133] },
+                foot: [['Score de section', '', `${sectionScore.toFixed(2)} (${percentageScore}%)`]],
+                footStyles: { fillColor: [22, 160, 133], textColor: [255, 255, 255] },
+            });
+        });
 
+        const globalScore = ((totalScore / criterionCount) * 100).toFixed(2);
+        doc.setFontSize(14);
+        doc.text(`Score global: ${globalScore}%`, 10, doc.lastAutoTable.finalY + 20);
+
+        doc.save("audit-6s-report.pdf");
+    }
 
     function toggleMode() {
         const body = document.body;
-        body.classList.toggle("bg-white");
-        body.classList.toggle("text-gray-900");
-        body.classList.toggle("bg-gray-900");
-        body.classList.toggle("text-white");
+        const isLightMode = body.classList.toggle("light-mode");
 
         const button = document.getElementById("toggle-mode");
-        if (body.classList.contains("bg-white")) {
-            button.textContent = "Switch to Dark Mode";
-            document.querySelectorAll("input, textarea").forEach(el => el.classList.add("bg-white"));
-            document.querySelectorAll("input, textarea").forEach(el => el.classList.remove("bg-transparent"));
-        } else {
-            button.textContent = "Switch to Light Mode";
-            document.querySelectorAll("input, textarea").forEach(el => el.classList.remove("bg-white"));
-            document.querySelectorAll("input, textarea").forEach(el => el.classList.add("bg-transparent"));
-        }
+        button.textContent = isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode";
     }
 });
 
