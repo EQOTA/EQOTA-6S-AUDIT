@@ -7,7 +7,7 @@ body {
 /* Default Dark Mode */
 
 .bg-gradient-to-r {
-    background: linear-gradient(135deg, #1b2e55 0%, #111827 100%);
+    background: linear-gradient(120deg, #106b7f 0%, #123368 100%);
 }
 
 .glass {
@@ -23,6 +23,47 @@ h1 {
     font-weight: 700;
     transition: color 0.3s ease;
 }
+/* Light Mode Styles */
+.light-mode {
+    background-color: #ffffff;
+    color: #000000;
+}
+
+.light-mode .glass {
+    background: rgba(255, 255, 255, 0.5);
+    color: #081b26;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.light-mode input,
+.light-mode textarea {
+    background: rgba(255, 255, 255, 0.9);
+    color: #111617;
+    border: 2px solid #e5e7eb;
+}
+
+.light-mode button,
+.light-mode .toggle-button {
+    background: linear-gradient(135deg, #4f9dff 0%, #90cdf4 100%);
+    color: #000000;
+    box-shadow: 0 4px 15px rgb(48, 47, 76, 0.5);
+}
+
+.light-mode .radio-container input[type="radio"] {
+    background-color: #e5e7eb;
+    border: 2px solid #f5f9ff;
+}
+
+.light-mode .radio-container input[type="radio"]:checked {
+    background-color: #4f9dff;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.4);
+}
+
+.light-mode .sub-criteria-container {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #ffffff;
+}
+
 
 /* Labels */
 label {
